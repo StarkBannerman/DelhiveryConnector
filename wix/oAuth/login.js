@@ -5,17 +5,18 @@ dotenv.config()
 
 wixRoutes.get('/signup', async (req, res) => { 
     try {
-       try {
-         const permissionRequestUrl = "https://www.wix.com/installer/install";
-         const appId = process.env.WIX_APP_ID;
-         const redirectUrl = `https://${req.get("host")}/wix/oauth/login`;
-         console.log(redirectUrl);
-         const token = req.query.token;
-         var url = `${permissionRequestUrl}?token=${token}&appId=${appId}&redirectUrl=${redirectUrl}`;
-         res.redirect(url);
-       } catch (e) {
-         Sentry.captureException(e);
-       }
+      try {
+        console.log(process.env.WIX_APP_ID);
+        const permissionRequestUrl = "https://www.wix.com/installer/install";
+        const appId = process.env.WIX_APP_ID;
+        const redirectUrl = `https://${req.get("host")}/wix/oauth/login`;
+        console.log(redirectUrl);
+        const token = req.query.token;
+        var url = `${permissionRequestUrl}?token=${token}&appId=${appId}&redirectUrl=${redirectUrl}`;
+        res.redirect(url);
+      } catch (e) {
+        Sentry.captureException(e);
+      }
     } catch (error) {
         throw error 
     }
