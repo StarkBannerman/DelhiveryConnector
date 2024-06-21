@@ -30,6 +30,7 @@ webhooksRoutes.post("/order-approved", async (req, res) => {
     const orderInfo = JSON.parse(parsedData.data);
     const orderData = orderInfo?.actionEvent?.body?.order;
     const shipmentData = await extractShipmentData(orderData);
+    // console.log(JSON.stringify(orderData));
     await delhiveryController(shipmentData, orderData);
     res.status(200).json({ message: "Order Updated Webhook received" });
   } catch (error) {

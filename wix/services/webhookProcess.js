@@ -29,6 +29,28 @@ export async function extractShipmentData(webhookData) {
   };
 
   const packageDetailsResult = packageDetails();
+  console.log(
+    parseFloat(priceSummary.shipping.amount) === 0
+      ? parseFloat(priceSummary.total.amount) + 20
+      : parseFloat(priceSummary.total.amount)
+  );
+  const formatProductDesc = (lineItems) => {
+    return lineItems
+      .map((item) => {
+        const { productName, descriptionLines } = item;
+        const desc = descriptionLines
+          .map((descLine) => {
+            if (descLine.lineType === "COLOR") {
+              return `${descLine.name.original}: ${descLine.color}`;
+            } else {
+              return `${descLine.name.original}: ${descLine.plainText.original}`;
+            }
+          })
+          .join(", ");
+        return `${productName.original} ${desc}`;
+      })
+      .join(", ");
+  };
 
   return {
     name: `${contactDetails.firstName} ${contactDetails.lastName}`,
@@ -46,12 +68,10 @@ export async function extractShipmentData(webhookData) {
     return_add: "",
     return_state: "",
     return_country: "",
-    products_desc: lineItems
-      .map((item) => item?.productName?.original)
-      .join(", "),
+    products_desc: formatProductDesc(lineItems),
     hsn_code: "",
     cod_amount:
-      parseFloat(priceSummary.shipping.amount) === 0
+      parseFloat(priceSummary.shipping.amount) === 0.0
         ? parseFloat(priceSummary.total.amount) + 20
         : parseFloat(priceSummary.total.amount) +
           parseFloat(priceSummary.shipping.amount),
@@ -67,7 +87,7 @@ export async function extractShipmentData(webhookData) {
     shipment_height: packageDetailsResult.height,
     shipment_length: packageDetailsResult.length,
     weight: packageDetailsResult.weight,
-    seller_gst_tin: "",
+    seller_gst_tin: "29AWWPN7083L1ZB",
     shipping_mode: "Surface",
     address_type: "",
   };

@@ -2,6 +2,7 @@ import axios from 'axios'
 import dotenv from 'dotenv';
 import { sendErrorEmail } from '../mailer/mailTemplates.js';
 import { createFulfillment } from "../wix/services/fullfillmentServices.js";
+import { addRecord } from "../airtable/services.js";
 dotenv.config();
 
 const pickupLocation = {
@@ -36,6 +37,7 @@ export async function createShipment(shipmentData, orderData) {
       console.log("Shippment Created");
       console.log(response.data.success);
       await createFulfillment(orderData, response.data);
+      await addRecord(orderData.id, response.data?.packages[0]?.waybill);
       return response.data;
     }
     console.log(response.data);
