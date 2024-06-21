@@ -1,6 +1,7 @@
 import axios from 'axios'
 import dotenv from 'dotenv';
 import { sendErrorEmail } from '../mailer/mailTemplates.js';
+import { createFulfillment } from "../wix/services/fullfillmentServices.js";
 dotenv.config();
 
 const pickupLocation = {
@@ -11,7 +12,7 @@ const pickupLocation = {
   country: "India",
   phone: "9842646076",
 };
-export async function createShipment(shipmentData) {
+export async function createShipment(shipmentData, orderData) {
   const url = "https://track.delhivery.com/api/cmu/create.json";
   const headers = {
     "Content-Type": "text/plain",
@@ -25,19 +26,24 @@ export async function createShipment(shipmentData) {
       pickup_location: pickupLocation,
     },
   };
-const formattedPayload = `format=json&data=${JSON.stringify(payload.data)}`;
+  const formattedPayload = `format=json&data=${JSON.stringify(payload.data)}`;
   try {
     const response = await axios.post(url, formattedPayload, { headers });
-    console.log(response.data.success);
-    if (response.data.success !=true) { 
+    if (response.data.success != true) {
+      console.log("Error Creating Shippment");
       await sendErrorEmail(shipmentData);
-    } 
-    console.log(response.data)
+    } else {
+      console.log("Shippment Created");
+      console.log(response.data.success);
+      await createFulfillment(orderData, response.data);
+      return response.data;
+    }
+    console.log(response.data);
     return response.data;
   } catch (error) {
-     await sendErrorEmail(shipmentData);
-      console.error(
-        error.status,
+    await sendErrorEmail(shipmentData);
+    console.error(
+      error.status,
       "Error:",
       error.response ? error.response.data : error.message
     );
