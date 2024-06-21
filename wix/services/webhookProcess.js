@@ -28,12 +28,15 @@ export async function extractShipmentData(webhookData) {
     }
   };
 
+  console.log(`Shipping : ${priceSummary.shipping.amount}`);
   const packageDetailsResult = packageDetails();
-  console.log(
-    parseFloat(priceSummary.shipping.amount) === 0
+  const calculateCODPrice = () => {
+    return parseFloat(priceSummary.shipping.amount) == 0
       ? parseFloat(priceSummary.total.amount) + 20
-      : parseFloat(priceSummary.total.amount)
-  );
+      : parseFloat(priceSummary.total.amount);
+  };
+
+  console.log(parseFloat(priceSummary.shipping.amount));
   const formatProductDesc = (lineItems) => {
     return lineItems
       .map((item) => {
@@ -70,13 +73,12 @@ export async function extractShipmentData(webhookData) {
     return_country: "",
     products_desc: formatProductDesc(lineItems),
     hsn_code: "",
-    cod_amount:
-      parseFloat(priceSummary.shipping.amount) === 0.0
-        ? parseFloat(priceSummary.total.amount) + 20
-        : parseFloat(priceSummary.total.amount) +
-          parseFloat(priceSummary.shipping.amount),
+    cod_amount: paymentStatus === "PAID" ? "" : calculateCODPrice(),
     order_date: new Date(createdDate).toLocaleDateString(),
-    total_amount: parseFloat(priceSummary.total.amount),
+    total_amount:
+      paymentStatus === "PAID"
+        ? calculateCODPrice()
+        : parseFloat(priceSummary.total.amount),
     seller_add:
       "Saibaba road, Thubarahalli, Munnekollal, Bengaluru, Karnataka 560037",
     seller_name: "Teenbaan",
