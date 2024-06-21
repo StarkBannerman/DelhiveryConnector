@@ -36,7 +36,7 @@ export async function extractShipmentData(webhookData) {
       : parseFloat(priceSummary.total.amount);
   };
 
-  console.log(parseFloat(priceSummary.shipping.amount));
+  // console.log(parseFloat(priceSummary.shipping.amount));
   const formatProductDesc = (lineItems) => {
     return lineItems
       .map((item) => {
@@ -77,8 +77,8 @@ export async function extractShipmentData(webhookData) {
     order_date: new Date(createdDate).toLocaleDateString(),
     total_amount:
       paymentStatus === "PAID"
-        ? calculateCODPrice()
-        : parseFloat(priceSummary.total.amount),
+        ? parseFloat(priceSummary.total.amount)
+        : calculateCODPrice(),
     seller_add:
       "Saibaba road, Thubarahalli, Munnekollal, Bengaluru, Karnataka 560037",
     seller_name: "Teenbaan",
