@@ -7,18 +7,21 @@ import { createShipment } from "../../delhivery/shipmentServices.js";
 import { delhiveryController } from "../../delhivery/controllers/DelhiveryControllers.js";
 dotenv.config();
 const PUBLIC_KEY = process.env.WIX_PUBLIC_KEY;
+const options = {
+  algorithms: ["HS256"], // Specify the algorithms that your token can use
+};
 webhooksRoutes.post("/order-approved", async (req, res) => {
-    try {
-    const data = jwt.verify(req.body, PUBLIC_KEY);
+  try {
+    const data = jwt.verify(req.body, PUBLIC_KEY, options);
     const parsedData = JSON.parse(data.data);
     const instanceId = parsedData.instanceId;
     const orderInfo = JSON.parse(parsedData.data);
     const orderData = orderInfo?.actionEvent?.body?.order;
-    const shipmentData = await extractShipmentData(orderData)
+    const shipmentData = await extractShipmentData(orderData);
     await delhiveryController(shipmentData, orderData);
     res.status(200).json({ message: "Order Updated Webhook received" });
   } catch (error) {
-        console.log(error);
+    console.log(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
