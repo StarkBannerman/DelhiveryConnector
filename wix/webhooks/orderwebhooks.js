@@ -22,7 +22,9 @@ cQIDAQAB
 -----END PUBLIC KEY-----`;
 webhooksRoutes.post("/order-approved", async (req, res) => {
   try {
-    const data = jwt.verify(req.body, PUBLIC_KEY, { algorithms: ["ES256"] });
+    const data = jwt.verify(req.body, PUBLIC_KEY, {
+      algorithms: ["RS256", "RS384", "RS512", "ES256", "ES384", "ES512"],
+    });
     const parsedData = JSON.parse(data.data);
     const instanceId = parsedData.instanceId;
     const orderInfo = JSON.parse(parsedData.data);
