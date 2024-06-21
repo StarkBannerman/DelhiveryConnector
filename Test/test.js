@@ -20,7 +20,8 @@ testRoutes.post('/', async (req, res) => {
       //         text: 'Error Creating Shippment for order with order Number'
       //         });
       const shipmentData = await extractShipmentData(orderdata);
-      console.log(shipmentData);
+      await delhiveryController(shipmentData, orderdata);
+      //   console.log(shipmentData);
       // await delhiveryController(shipment)
       res.status(200).json();
     } catch (error) {
