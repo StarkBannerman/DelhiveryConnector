@@ -37,7 +37,7 @@ export async function createShipment(shipmentData, orderData) {
       console.log("Shippment Created");
       console.log(response.data.success);
       await createFulfillment(orderData, response.data);
-      await addRecord(orderData.id, response.data?.packages[0]?.waybill);
+      // await addRecord(orderData.id, response.data?.packages[0]?.waybill);
       return response.data;
     }
     console.log(response.data);
