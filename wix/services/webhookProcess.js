@@ -28,7 +28,7 @@ export async function extractShipmentData(webhookData) {
     }
   };
 
-  console.log(`Shipping : ${priceSummary.shipping.amount}`);
+  // console.log(`Shipping : ${priceSummary.shipping.amount}`);
   const packageDetailsResult = packageDetails();
   const calculateCODPrice = () => {
     return parseFloat(priceSummary.shipping.amount) == 0

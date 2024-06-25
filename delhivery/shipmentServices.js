@@ -1,6 +1,9 @@
 import axios from 'axios'
 import dotenv from 'dotenv';
-import { sendErrorEmail } from '../mailer/mailTemplates.js';
+import {
+  notifyAdminOnShipmentError,
+  sendErrorEmail,
+} from "../mailer/mailTemplates.js";
 import { createFulfillment } from "../wix/services/fullfillmentServices.js";
 import { addRecord } from "../airtable/services.js";
 dotenv.config();
@@ -33,15 +36,17 @@ export async function createShipment(shipmentData, orderData) {
     if (response.data.success != true) {
       console.log("Error Creating Shippment");
       await sendErrorEmail(shipmentData);
+      await notifyAdminOnShipmentError(shipmentData, response.data);
     } else {
       console.log("Shippment Created");
       console.log(response.data.success);
       await createFulfillment(orderData, response.data);
+
       // await addRecord(orderData.id, response.data?.packages[0]?.waybill);
       return response.data;
     }
     console.log(response.data);
-    return response.data;
+    // return response.data;
   } catch (error) {
     await sendErrorEmail(shipmentData);
     console.error(
