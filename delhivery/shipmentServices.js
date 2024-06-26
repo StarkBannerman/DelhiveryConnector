@@ -33,9 +33,12 @@ export async function createShipment(shipmentData, orderData) {
   const formattedPayload = `format=json&data=${JSON.stringify(payload.data)}`;
   try {
     const response = await axios.post(url, formattedPayload, { headers });
-    if (response.data.success != true) {
+    if (
+      response.data.success != true &&
+      response.data.packages[0].remarks[0] !== "Duplicate order id"
+    ) {
       console.log("Error Creating Shippment");
-      await sendErrorEmail(shipmentData);
+      await sendErrorEmail(shipmentData, response.data.packages[0].remarks[0]);
       await notifyAdminOnShipmentError(shipmentData, response.data);
     } else {
       console.log("Shippment Created");

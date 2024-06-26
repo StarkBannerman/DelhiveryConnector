@@ -29,7 +29,7 @@ export async function sendNotServiceableEmail(shipment) {
   }
 }
 
-export async function sendErrorEmail(shipment) {
+export async function sendErrorEmail(shipment, error) {
   const { name, order, pin, order_date, products_desc } = shipment;
   const mailOptions = {
     from: process.env.EMAIL_USER,
@@ -45,6 +45,7 @@ export async function sendErrorEmail(shipment) {
         <li>Pincode: ${pin}</li>
         <li>Products: ${products_desc}</li>
       </ul>
+      <p>${error}</p>
       <p>Please Do the needfull..</p>
       <p>Best regards,</p>
       <p>Arun</p>
