@@ -31,7 +31,10 @@ export async function createFulfillment(orderData, carrierInfo, shipmentData) {
     console.log("Fullfillment Created");
     console.log(response.data);
   } catch (error) {
-    await sendShipmentErrorEmail(shipmentData, error);
+    await sendShipmentErrorEmail(
+      shipmentData,
+      error?.response ? error?.response : error
+    );
     console.error(
       "Error creating fulfillment:",
       error.response ? error.response.data : error.message
