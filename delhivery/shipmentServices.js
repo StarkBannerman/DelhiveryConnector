@@ -42,10 +42,7 @@ export async function createShipment(shipmentData, orderData) {
       await notifyAdminOnShipmentError(shipmentData, response.data);
     } else {
       console.log("Shippment Created");
-      console.log(response.data.success);
-      await createFulfillment(orderData, response.data);
-
-      // await addRecord(orderData.id, response.data?.packages[0]?.waybill);
+      await createFulfillment(orderData, response.data, shipmentData);
       return response.data;
     }
     console.log(response.data);
