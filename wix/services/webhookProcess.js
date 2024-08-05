@@ -27,7 +27,12 @@ export async function extractShipmentData(webhookData) {
       };
     }
   };
-
+  console.log(address);
+  console.log(
+    address?.addressLine2
+      ? `${address?.addressLine},${address?.addressLine2}`
+      : address?.addressLine
+  );
   // console.log(`Shipping : ${priceSummary.shipping.amount}`);
   const packageDetailsResult = packageDetails();
   const calculateCODPrice = () => {
@@ -57,7 +62,9 @@ export async function extractShipmentData(webhookData) {
 
   return {
     name: `${contactDetails.firstName} ${contactDetails.lastName}`,
-    add: address?.addressLine,
+    add: address?.addressLine2
+      ? `${address?.addressLine},${address?.addressLine2}`
+      : address?.addressLine,
     pin: address?.postalCode,
     city: address?.city,
     state: address?.subdivisionFullname,
