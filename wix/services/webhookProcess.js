@@ -27,12 +27,7 @@ export async function extractShipmentData(webhookData) {
       };
     }
   };
-  console.log(address);
-  console.log(
-    address?.addressLine2
-      ? `${address?.addressLine},${address?.addressLine2}`
-      : address?.addressLine
-  );
+
   // console.log(`Shipping : ${priceSummary.shipping.amount}`);
   const packageDetailsResult = packageDetails();
   const calculateCODPrice = () => {
