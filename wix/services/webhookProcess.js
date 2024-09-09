@@ -55,6 +55,10 @@ export async function extractShipmentData(webhookData) {
       .join(", ");
   };
 
+  const formatPhoneNumber = (phone) => {
+    return phone ? phone.replace(/\D/g, "") : "";
+  };
+
   return {
     name: `${contactDetails.firstName} ${contactDetails.lastName}`,
     add: address?.addressLine2
@@ -64,7 +68,7 @@ export async function extractShipmentData(webhookData) {
     city: address?.city,
     state: address?.subdivisionFullname,
     country: address?.countryFullname,
-    phone: contactDetails?.phone,
+    phone: formatPhoneNumber(contactDetails?.phone),
     order: webhookData.number,
     payment_mode: paymentStatus === "PAID" ? "Prepaid" : "COD",
     return_pin: "",
