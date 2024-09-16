@@ -5,7 +5,6 @@ import jwt from "jsonwebtoken";
 import { extractShipmentData } from "../services/webhookProcess.js";
 import { createShipment } from "../../delhivery/shipmentServices.js";
 import { delhiveryController } from "../../delhivery/controllers/DelhiveryControllers.js";
-import shippingEvents from "../../delhivery/events.js";
 dotenv.config();
 // const PUBLIC_KEY = process.env.WIX_PUBLIC_KEY;
 const options = {
@@ -30,9 +29,9 @@ webhooksRoutes.post("/order-approved", async (req, res) => {
     const instanceId = parsedData.instanceId;
     const orderInfo = JSON.parse(parsedData.data);
     const orderData = orderInfo?.actionEvent?.body?.order;
-    // const shipmentData = await extractShipmentData(orderData);
-    // await delhiveryController(shipmentData, orderData);
-    shippingEvents.emit("createLabel", orderData);
+    const shipmentData = await extractShipmentData(orderData);
+    console.log(JSON.stringify(orderData));
+    await delhiveryController(shipmentData, orderData);
     res.status(200).json({ message: "Order Updated Webhook received" });
   } catch (error) {
     console.log(error);
