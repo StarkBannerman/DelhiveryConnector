@@ -39,7 +39,7 @@ export async function createShipment(shipmentData, orderData) {
     ) {
       console.log("Error Creating Shippment");
       await sendErrorEmail(shipmentData, response.data.packages[0].remarks[0]);
-      await notifyAdminOnShipmentError(shipmentData, response.data);
+      // await notifyAdminOnShipmentError(shipmentData, response.data);
     } else {
       console.log("Shippment Created");
       await createFulfillment(orderData, response.data, shipmentData);
@@ -48,7 +48,7 @@ export async function createShipment(shipmentData, orderData) {
     console.log(response.data);
     // return response.data;
   } catch (error) {
-    await sendErrorEmail(shipmentData);
+    // await sendErrorEmail(shipmentData);
     console.error(
       error.status,
       "Error:",

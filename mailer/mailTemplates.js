@@ -33,7 +33,7 @@ export async function sendErrorEmail(shipment, error) {
   const { name, order, pin, order_date, products_desc } = shipment;
   const mailOptions = {
     from: process.env.EMAIL_USER,
-    to: [process.env.RECEIVER_EMAIL, "kathivsvip@gmail.com"],
+    to: ["kathivsvip@gmail.com"],
     subject: `Shipment Not Created for Order - Order No: ${order}`,
     html: `
       <p>Hi team,</p>
